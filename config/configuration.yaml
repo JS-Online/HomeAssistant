@@ -1,0 +1,36 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+
+# EnOcean
+enocean:
+  device: /dev/ttyUSB0
+
+# Switches
+binary_sensor:
+  - platform: enocean
+    id: [0x00,0x00,0x00,0x00]
+  - platform: enocean
+    id: [0x00,0x00,0x00,0x00]
+  - platform: enocean
+    id: [0x00,0x00,0x00,0x00]
+  - platform: enocean
+    id: [0x00,0x00,0x00,0x00]
+  - platform: enocean
+    id: [0x00,0x00,0x00,0x00]
+
+
+logger:
+  default: warn
+  logs:
+    homeassistant.components.enocean: debug

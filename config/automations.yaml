@@ -1,0 +1,327 @@
+  - alias: 'Enocean Switch1 Taste O'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: button_pressed
+      event_data:
+        id: [0x00,0x00,0x00,0x00]
+        pushed: 1
+        which: 1
+        onoff: 1
+    action:
+      service: light.toggle
+      data:
+        entity_id:
+          - light.tisch_1
+          - light.tisch_2
+
+  - alias: 'Enocean Switch1 Taste *'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: button_pressed
+      event_data:
+        id: [0x00,0x00,0x00,0x00]
+        pushed: 1
+        which: 1
+        onoff: 0
+    action:
+      service: light.toggle
+      data:
+        entity_id:
+          - light.hue_filament_bulb_1
+          - light.hue_filament_bulb_2
+
+  - alias: 'Enocean Switch1 Taste +'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: button_pressed
+      event_data:
+        id: [0x00,0x00,0x00,0x00]
+        pushed: 1
+        which: 0
+        onoff: 0
+    action:
+      service: light.turn_on
+      data:
+        entity_id:
+          - light.hue_filament_bulb_1
+          - light.hue_filament_bulb_2
+        brightness_pct: >
+          {% set step_size = 25 %}
+          {% set cb = (state_attr('light.hue_filament_bulb_1', 'brightness') | float / 255.0) * 100.0 %}
+          {% set new_brightness = cb | int + step_size %}
+          {% if 91 <= new_brightness < (90 + step_size) %}
+            100
+          {% else %}
+            {{ new_brightness if new_brightness < 100 else 0 }}
+          {% endif %}
+
+
+  - alias: 'Enocean Switch1 Taste -'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: button_pressed
+      event_data:
+        id: [0x00,0x00,0x00,0x00]
+        pushed: 1
+        which: 0
+        onoff: 1
+    action:
+      service: light.turn_on
+      data:
+        entity_id:
+          - light.tisch_1
+          - light.tisch_2
+        brightness_pct: >
+          {% set step_size = 25 %}
+          {% set cb = (state_attr('light.tisch_1', 'brightness') | float / 255.0) * 100.0 %}
+          {% set new_brightness = cb | int + step_size %}
+          {% if 91 <= new_brightness < (90 + step_size) %}
+            100
+          {% else %}
+            {{ new_brightness if new_brightness < 100 else 0 }}
+          {% endif %}
+
+# -------------------------------------------------------------
+
+  - alias: 'Enocean Switch2 Taste O'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: button_pressed
+      event_data:
+        id: [0x00,0x00,0x00,0x00]
+        pushed: 1
+        which: 1
+        onoff: 1
+    action:
+      service: light.toggle
+      data:
+        entity_id:
+          - light.hue_lightstrip_bathroom_1
+          - light.hue_lightstrip_bathroom_2
+
+  - alias: 'Enocean Switch2 Taste *'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: button_pressed
+      event_data:
+        id: [0x00,0x00,0x00,0x00]
+        pushed: 1
+        which: 1
+        onoff: 0
+    action:
+      service: light.turn_on
+      data:
+        entity_id:
+          - light.hue_lightstrip_bathroom_1
+          - light.hue_lightstrip_bathroom_2
+        brightness_pct: >
+          {% set step_size = 25 %}
+          {% set cb = (state_attr('light.hue_lightstrip_bathroom_1', 'brightness') | float / 255.0) * 100.0 %}
+          {% set new_brightness = cb | int + step_size %}
+          {% if 91 <= new_brightness < (90 + step_size) %}
+            100
+          {% else %}
+            {{ new_brightness if new_brightness < 100 else 0 }}
+          {% endif %}
+
+  - alias: 'Enocean Switch2 Taste +'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: button_pressed
+      event_data:
+        id: [0x00,0x00,0x00,0x00]
+        pushed: 1
+        which: 0
+        onoff: 0
+    action:
+      - service: light.turn_on
+        entity_id: [0x00,0x00,0x00,0x00]
+        data_template: 
+          brightness: '{{states.light.hue_lightstrip_bathroom_1.attributes.brightness + 50}}'
+      - service: light.turn_on
+        entity_id: [0x00,0x00,0x00,0x00]
+        data_template: 
+          brightness: '{{states.light.hue_lightstrip_bathroom_2.attributes.brightness + 50}}'
+
+
+  - alias: 'Enocean Switch2 Taste -'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: button_pressed
+      event_data:
+        id: [0x00,0x00,0x00,0x00]
+        pushed: 1
+        which: 0
+        onoff: 1
+    action:
+      - service: light.turn_on
+        entity_id: [0x00,0x00,0x00,0x00]
+        data_template: 
+          brightness: '{{states.light.hue_lightstrip_bathroom_1.attributes.brightness - 50}}'
+      - service: light.turn_on
+        entity_id: [0x00,0x00,0x00,0x00]
+        data_template: 
+          brightness: '{{states.light.hue_lightstrip_bathroom_2.attributes.brightness - 50}}'
+
+# -------------------------------------------------------------
+
+  - alias: 'Enocean hue1 Taste **'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: button_pressed
+      event_data:
+        id: [0x00,0x00,0x00,0x00]
+        pushed: 1
+        which: 1
+        onoff: 0
+    action:
+      - service: light.turn_on
+        entity_id: [0x00,0x00,0x00,0x00]
+        data_template: 
+          brightness: '{{states.light.bett.attributes.brightness - 50}}'
+
+  - alias: 'Enocean hue1 Taste ***'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: button_pressed
+      event_data:
+        id: [0x00,0x00,0x00,0x00]
+        pushed: 1
+        which: 1
+        onoff: 1
+    action:
+      service: light.toggle
+      data:
+        entity_id:
+          - light.bett
+
+  - alias: 'Enocean hue1 Taste ****'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: button_pressed
+      event_data:
+        id: [0x00,0x00,0x00,0x00]
+        pushed: 1
+        which: 0
+        onoff: 1
+    action:
+      - service: light.turn_on
+        entity_id: [0x00,0x00,0x00,0x00]
+        data_template: 
+          brightness: '{{states.light.bett.attributes.brightness + 50}}'
+
+# -------------------------------------------------------------
+
+
+
+  - alias: 'Enocean hue2 Taste **'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: button_pressed
+      event_data:
+        id: [0x00,0x00,0x00,0x00]
+        pushed: 1
+        which: 1
+        onoff: 0
+    action:
+      - service: light.turn_on
+        entity_id: [0x00,0x00,0x00,0x00]
+        data_template: 
+          brightness: '{{states.light.bett.attributes.brightness - 50}}'
+
+  - alias: 'Enocean hue2 Taste ***'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: button_pressed
+      event_data:
+        id: [0x00,0x00,0x00,0x00]
+        pushed: 1
+        which: 1
+        onoff: 1
+    action:
+      service: light.toggle
+      data:
+        entity_id:
+          - light.bett
+
+  - alias: 'Enocean hue2 Taste ****'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: button_pressed
+      event_data:
+        id: [0x00,0x00,0x00,0x00]
+        pushed: 1
+        which: 0
+        onoff: 1
+    action:
+      - service: light.turn_on
+        entity_id: [0x00,0x00,0x00,0x00]
+        data_template: 
+          brightness: '{{states.light.bett.attributes.brightness + 50}}'
+
+# -------------------------------------------------------------
+
+
+  - alias: 'Enocean hue3 Taste **'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: button_pressed
+      event_data:
+        id: [0x00,0x00,0x00,0x00]
+        pushed: 1
+        which: 1
+        onoff: 0
+    action:
+      - service: light.turn_on
+        entity_id: [0x00,0x00,0x00,0x00]
+        data_template: 
+          brightness: '{{states.light.hue_ambiance_lamp.attributes.brightness - 50}}'
+
+  - alias: 'Enocean hue3 Taste ***'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: button_pressed
+      event_data:
+        id: [0x00,0x00,0x00,0x00]
+        pushed: 1
+        which: 1
+        onoff: 1
+    action:
+      service: light.toggle
+      data:
+        entity_id:
+          - light.hue_ambiance_lamp
+
+  - alias: 'Enocean hue3 Taste ****'
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: button_pressed
+      event_data:
+        id: [0x00,0x00,0x00,0x00]
+        pushed: 1
+        which: 0
+        onoff: 1
+    action:
+      - service: light.turn_on
+        entity_id: [0x00,0x00,0x00,0x00]
+        data_template: 
+          brightness: '{{states.light.hue_ambiance_lamp.attributes.brightness + 50}}'
+
+# -------------------------------------------------------------
